@@ -1,44 +1,26 @@
-#include <chrono>
-#include <fstream>
-#include <iostream>
-
-#include <date/date.h>
-#include <nlohmann/json.hpp>
-
 #include "internship.h"
 
-using json = nlohmann::json;
-using namespace date;
-
 namespace internship {
-    //Class to store all detected OS with it's values required to be printed (name, version, support period)
-    class OperatingSystem
+    //class to store all detected OS with it's values required to be printed (name, version, support period)
+    //constructor
+    OperatingSystem::OperatingSystem(std::string name, double supportPeriod, std::string version)
     {
-        private:
-            std::string m_name;
-            double m_supportPeriod;
-            std::string m_version;
+        this->m_name = name;
+        this->m_supportPeriod = supportPeriod;
+        this->m_version = version;
+    }
+    //function to print necessary info
+    void OperatingSystem::print()
+    {
+        std::cout << m_name << " " << m_version << " " << m_supportPeriod << "\n";
+    }
 
-        public:
-            //Constructor
-            OperatingSystem(std::string name, double supportPeriod, std::string version)
-            {
-                this->m_name = name;
-                this->m_supportPeriod = supportPeriod;
-                this->m_version = version;
-            }
-            //Function to print necessary info
-            void print()
-            {
-                std::cout << m_name << " " << m_version << " " << m_supportPeriod << "\n";
-            }
+    //getter for support period 
+    double OperatingSystem::getSupportPeriod() const
+    {
+        return m_supportPeriod;
+    }          
 
-            //Getters support period 
-            double getSupportPeriod() const
-            {
-                return m_supportPeriod;
-            }          
-    };
 
     //custom comparer to sort OperatingSystem instances based on length of support period
     bool compareSupportPeriod(const OperatingSystem& obj1, const OperatingSystem& obj2) 
@@ -55,16 +37,16 @@ namespace internship {
         return std::chrono::system_clock::from_time_t(std::mktime(&date));
     }
 
-    bool checkIfInputIsValid(const json& jsonObject, const std::string& eol, const std::string& releaseDate, const std::string& key3) 
+    bool checkIfInputIsValid(const json& jsonObject, const std::string& eol, const std::string& releaseDate, const std::string& version) 
     {
-        // Check if all keys are present in the JSON object
-        if (!jsonObject.contains(eol) || !jsonObject.contains(releaseDate) || !jsonObject.contains(key3)) 
+        //check if all keys are present in the JSON object
+        if (!jsonObject.contains(eol) || !jsonObject.contains(releaseDate) || !jsonObject.contains(version)) 
         {
             return false;
         }
 
-        // Check if all values corresponding to the keys are strings
-        if (!jsonObject[eol].is_string() || !jsonObject[releaseDate].is_string() || !jsonObject[key3].is_string()) 
+        //check if all values corresponding to the keys are strings
+        if (!jsonObject[eol].is_string() || !jsonObject[releaseDate].is_string() || !jsonObject[version].is_string()) 
         {
             return false;
         }
@@ -141,4 +123,5 @@ namespace internship {
             operatingSystems.at(i).print();
         }
     }
+
 }
